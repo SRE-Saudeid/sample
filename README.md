@@ -1,1 +1,1 @@
-# API Parceiros
+# API Cupom (Parceiros)

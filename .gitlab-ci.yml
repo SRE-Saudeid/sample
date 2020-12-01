@@ -1,0 +1,121 @@
+stages:
+    - dependencies
+    - release
+    - test
+    - build
+    - deploy
+
+cache:
+    key:
+        files:
+            - package.json
+    paths:
+        - node_modules
+
+dependencies:
+    image: node:lts-alpine
+    stage: dependencies
+    before_script:
+        - apk update
+        - apk add git
+    script:
+        - npm install
+    artifacts:
+        expire_in: 20 minutes
+        paths:
+            - node_modules
+
+test:
+    stage: test
+    image: node:lts-alpine
+    except:
+        - tags
+    services:
+        - mongo:4
+    variables:
+        MONGO_URI: 'mongodb://mongo/api-voucher'
+    script:
+        - npm t
+
+release:
+    stage: release
+    image: node:latest
+    only:
+        - master
+    before_script:
+        - npm i -g typescript semantic-release @semantic-release/gitlab @semantic-release/git @semantic-release/changelog
+    script:
+        - mkdir -p $HOME/.ssh
+        - echo 'Host git.grupofleury.com.br' > $HOME/.ssh/config
+        - echo '    IdentifyFile ' $GIT_SSH_KEY_FILE >> $HOME/.ssh/config
+        - cat -n $HOME/.ssh/config
+        - semantic-release
+
+build:
+    stage: build
+    image: node:lts-alpine
+    before_script:
+        - apk update
+        - apk --no-cache add zip
+        - apk add git
+    script:
+        - npm run build
+        - mkdir -p .output
+        - zip -x ".output/*" -x ".git/*" -FSr ".output/${CI_PROJECT_NAME}.zip" .
+    artifacts:
+        paths:
+            - .output/${CI_PROJECT_NAME}.zip
+        expire_in: 15 minutes
+    only:
+        - develop
+        - /^release\/.+$/
+        - tags
+
+.deploy:
+    stage: deploy
+    image:
+        name: amazon/aws-cli
+        entrypoint: ['/bin/bash', '-c']
+    before_script:
+        - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+        - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+        - aws configure set region $AWS_REGION
+    script:
+        - aws s3 cp ".output/${CI_PROJECT_NAME}.zip" "s3://${S3_BUCKET}/${CI_PROJECT_NAME}-${PROJECT_ENVIRONMENT}-${CI_PIPELINE_ID}.zip"
+        - aws elasticbeanstalk create-application-version --application-name ${CI_PROJECT_NAME}-${PROJECT_ENVIRONMENT} --version-label ${CI_PROJECT_NAME}-${PROJECT_ENVIRONMENT}-${CI_PIPELINE_ID} --source-bundle S3Bucket=$S3_BUCKET,S3Key=${CI_PROJECT_NAME}-${PROJECT_ENVIRONMENT}-${CI_PIPELINE_ID}.zip
+        - aws elasticbeanstalk update-environment --application-name ${CI_PROJECT_NAME}-${PROJECT_ENVIRONMENT} --environment-name ${CI_PROJECT_NAME}-${PROJECT_ENVIRONMENT} --version-label ${CI_PROJECT_NAME}-${PROJECT_ENVIRONMENT}-${CI_PIPELINE_ID}
+    dependencies:
+        - build
+
+deploy:dev:
+    extends: .deploy
+    variables:
+        PROJECT_ENVIRONMENT: dev
+        AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+        AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+        AWS_REGION: $DEV_AWS_REGION
+        S3_BUCKET: $DEV_AWS_S3_BUCKET
+    only:
+        - develop
+
+deploy:hml:
+    extends: .deploy
+    variables:
+        PROJECT_ENVIRONMENT: hml
+        AWS_ACCESS_KEY_ID: $HML_AWS_ACCESS_KEY_ID
+        AWS_SECRET_ACCESS_KEY: $HML_AWS_SECRET_ACCESS_KEY
+        AWS_REGION: $HML_AWS_REGION
+        S3_BUCKET: $HML_AWS_S3_BUCKET
+    only:
+        - /^release\/.+$/
+
+deploy:prd:
+    extends: .deploy
+    variables:
+        PROJECT_ENVIRONMENT: prd
+        AWS_ACCESS_KEY_ID: $PRD_AWS_ACCESS_KEY_ID
+        AWS_SECRET_ACCESS_KEY: $PRD_AWS_SECRET_ACCESS_KEY
+        AWS_REGION: $PRD_AWS_REGION
+        S3_BUCKET: $PRD_AWS_S3_BUCKET
+    only:
+        - tags

@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  api:
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "npm run dev"
+    environment:
+      - MONGO_URI='mongodb://mongo:27017/admin'
+      - MONGO_DATABASE=boiler-plate
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/var/opt/mongo/data
+volumes:
+  mongo-data:
+  app:

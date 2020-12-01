@@ -1,0 +1,158 @@
+definitions:
+    Error:
+        type: 'object'
+        properties:
+            statusCode:
+                type: 'number'
+            message:
+                type: 'string'
+    CouponResponse:
+        type: 'object'
+        properties:
+            id:
+                type: 'string'
+            provider:
+                type: 'string'
+            name:
+                type: 'string'
+            description:
+                type: 'string'
+            code:
+                type: 'string'
+            link:
+                type: 'string'
+            imageUrl:
+                type: 'string'
+            title:
+                type: 'string'
+            startDate:
+                type: 'string'
+            endDate:
+                type: 'string'
+    Coupon:
+        type: 'object'
+        properties:
+            provider:
+                type: 'string'
+            name:
+                type: 'string'
+            description:
+                type: 'string'
+            code:
+                type: 'string'
+            link:
+                type: 'string'
+            imageUrl:
+                type: 'string'
+            title:
+                type: 'string'
+            startDate:
+                type: 'string'
+            endDate:
+                type: 'string'
+
+paths:
+    /v1/coupons:
+        get:
+            tags:
+                - 'coupon'
+            summary: 'Retorna todos cupons'
+            parameters:
+                - in: 'query'
+                  name: 'page'
+                  type: 'integer'
+                  description: 'Padrão 1'
+                - in: 'query'
+                  name: 'limit'
+                  type: 'integer'
+                  description: 'Padrão 20'
+                - in: 'query'
+                  name: 'sort'
+                  type: 'string'
+                  description: 'Ordena os resultado pelos campos passado (separado por vírgula)'
+                - in: "query"
+                  name: "filter"
+                  type: "string"
+                  description: "Escreva a propriedade que deseja filtrar e passe o valor (não funciona no swagger :(, pois no lugar de 'filter' você coloca o nome do seu campo. (Exemplo: 'provider=X' retorna todos cupons desse provider"
+            responses:
+                '200':
+                    description: 'Success'
+                    schema:
+                        type: 'array'
+                        items:
+                            $ref: '#/definitions/CouponResponse'
+                '204':
+                    description: 'No Content'
+        post:
+            tags:
+                - 'coupon'
+            summary: 'Cria um novo cupom'
+            parameters:
+                - in: 'body'
+                  name: 'body'
+                  required: true
+                  schema:
+                      $ref: '#/definitions/Coupon'
+            responses:
+                '201':
+                    description: 'Created'
+                    schema:
+                        $ref: '#/definitions/CouponResponse'
+                '422':
+                    description: 'Unprocessable Entity'
+                    schema:
+                        $ref: '#/definitions/Error'
+    /v1/coupons/{id}:
+        get:
+            tags:
+                - 'coupon'
+            summary: 'Retorna um cupom especifico'
+            parameters:
+                - in: 'path'
+                  name: 'id'
+                  required: true
+                  type: 'string'
+            responses:
+                '200':
+                    description: 'Success'
+                    schema:
+                        $ref: '#/definitions/CouponResponse'
+                '404':
+                    description: 'Not Found'
+                    schema:
+                        $ref: '#/definitions/Error'
+        patch:
+            tags:
+                - 'coupon'
+            summary: 'Atualiza um cupom especifico'
+            parameters:
+                - in: 'path'
+                  name: 'id'
+                  required: true
+                  type: 'string'
+                - in: 'body'
+                  name: 'body'
+                  required: true
+                  schema:
+                      $ref: '#/definitions/Coupon'
+            responses:
+                '200':
+                    description: 'Success'
+                    schema:
+                        $ref: '#/definitions/CouponResponse'
+                '404':
+                    description: 'Not Found'
+                    schema:
+                        $ref: '#/definitions/Error'
+        delete:
+            tags:
+                - 'coupon'
+            summary: 'Desabilita um cupom especifico'
+            parameters:
+                - in: 'path'
+                  name: 'id'
+                  required: true
+                  type: 'string'
+            responses:
+                '204':
+                    description: 'No Content'

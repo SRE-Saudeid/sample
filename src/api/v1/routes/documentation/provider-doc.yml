@@ -1,0 +1,138 @@
+definitions:
+    Error:
+        type: 'object'
+        properties:
+            statusCode:
+                type: 'number'
+            message:
+                type: 'string'
+    ProviderResponse:
+        type: 'object'
+        properties:
+            id:
+                type: 'string'
+            name:
+                type: 'string'
+            hiperlink:
+                type: 'string'
+            imageUrl:
+                type: 'string'
+            cnpj:
+                type: 'string'
+    Provider:
+        type: 'object'
+        properties:
+            name:
+                type: 'string'
+            hiperlink:
+                type: 'string'
+            imageUrl:
+                type: 'string'
+            cnpj:
+                type: 'string'
+
+paths:
+    /v1/providers:
+        get:
+            tags:
+                - 'provider'
+            summary: 'Retorna todos fornecedores'
+            parameters:
+                - in: 'query'
+                  name: 'page'
+                  type: 'integer'
+                  description: 'Padrão 1'
+                - in: 'query'
+                  name: 'limit'
+                  type: 'integer'
+                  description: 'Padrão 20'
+                - in: 'query'
+                  name: 'sort'
+                  type: 'string'
+                  description: 'Ordena os resultado pelos campos passado (separado por vírgula)'
+            responses:
+                '200':
+                    description: 'Success'
+                    schema:
+                        type: 'array'
+                        items:
+                            $ref: '#/definitions/ProviderResponse'
+                '204':
+                    description: 'No Content'
+        post:
+            tags:
+                - 'provider'
+            summary: 'Cria um novo fornecedor'
+            parameters:
+                - in: 'body'
+                  name: 'body'
+                  required: true
+                  schema:
+                      $ref: '#/definitions/Provider'
+            responses:
+                '201':
+                    description: 'Created'
+                    schema:
+                        $ref: '#/definitions/Provider'
+                '400':
+                    description: 'Bad Request'
+                    schema:
+                        $ref: '#/definitions/Error'
+                '422':
+                    description: 'Unprocessable Entity'
+                    schema:
+                        $ref: '#/definitions/Error'
+    /v1/providers/{id}:
+        get:
+            tags:
+                - 'provider'
+            summary: 'Retorna um fornecedor especifico'
+            parameters:
+                - in: 'path'
+                  name: 'id'
+                  required: true
+                  type: 'string'
+            responses:
+                '200':
+                    description: 'Success'
+                    schema:
+                        $ref: '#/definitions/ProviderResponse'
+                '404':
+                    description: 'Not Found'
+                    schema:
+                        $ref: '#/definitions/Error'
+        patch:
+            tags:
+                - 'provider'
+            summary: 'Atualiza um fornecedor especifico'
+            parameters:
+                - in: 'path'
+                  name: 'id'
+                  required: true
+                  type: 'string'
+                - in: 'body'
+                  name: 'body'
+                  required: true
+                  schema:
+                      $ref: '#/definitions/Provider'
+            responses:
+                '200':
+                    description: 'Success'
+                    schema:
+                        $ref: '#/definitions/ProviderResponse'
+                '404':
+                    description: 'Not Found'
+                    schema:
+                        $ref: '#/definitions/Error'
+        delete:
+            tags:
+                - 'provider'
+            summary: 'Desabilita um fornecedor especifico'
+            parameters:
+                - in: 'path'
+                  name: 'id'
+                  required: true
+                  type: 'string'
+            responses:
+                '204':
+                    description: 'No Content'

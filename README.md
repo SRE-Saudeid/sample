@@ -1,2 +1,1 @@
-# gestao-saude-ms-cupons
-
+# API Parceiros

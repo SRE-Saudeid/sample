@@ -5,12 +5,12 @@ stages:
     - build
     - deploy
 
-cache:
-    key:
-        files:
-            - package.json
-    paths:
-        - node_modules
+# cache:
+#     key:
+#         files:
+#             - package.json
+#     paths:
+#         - node_modules
 
 dependencies:
     image: node:lts-alpine
@@ -19,21 +19,19 @@ dependencies:
         - apk update
         - apk add git
     script:
-        - npm install
+        - npm i
     artifacts:
         expire_in: 20 minutes
         paths:
             - node_modules
 
 test:
+    image: node:12.20-alpine3.10
     stage: test
-    image: node:lts-alpine
-    except:
-        - tags
-    services:
-        - mongo:4
-    variables:
-        MONGO_URI: 'mongodb://mongo/api-voucher'
+    before_script:
+        - apk add git
+        - rm -rf node_modules
+        - npm i
     script:
         - npm t
 

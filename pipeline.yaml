@@ -1,0 +1,40 @@
+# Repo: templates/
+# File: azure-pipelines.yml
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: templates
+
+
+stages:
+- stage: Development
+  jobs:
+  - template: BuildTemplates/develop-build.yaml@templates
+    parameters:
+        namespace: 'b2c'
+        release: 'dev-cupons'
+        stage: 'Development'
+        environment: 'dev'
+        app: 'cupons'
+- stage: Homologation
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
+  jobs:
+  - template: BuildTemplates/develop-build.yaml@templates
+    parameters:
+        namespace: 'b2c'
+        release: 'hml-cupons'
+        stage: 'Homologation'
+        environment: 'hml'
+        app: 'cupons'
+- stage: Production
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
+  jobs:
+  - template: BuildTemplates/develop-build.yaml@templates
+    parameters:
+        namespace: 'b2c'
+        release: 'prod-cupons'
+        stage: 'Production'
+        environment: 'prod'
+        app: 'cupons'

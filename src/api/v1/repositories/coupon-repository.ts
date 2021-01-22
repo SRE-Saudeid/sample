@@ -32,7 +32,7 @@ export class CouponRepository {
     @log
     async getAll(query?: unknown): Promise<ICouponModel[]> {
         try {
-            const queryResponse = new RestFeaturesBuilder(<Query<any>>CouponModel.find(), query)
+            const queryResponse = new RestFeaturesBuilder(<Query<any>>CouponModel.find({ active: true }), query)
                 .sort()
                 .filter()
                 .paginate()

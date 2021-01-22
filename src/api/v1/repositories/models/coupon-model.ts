@@ -69,6 +69,6 @@ const CouponSchema = new Schema(
     },
 );
 
-const CouponModel = model<ICouponModel>('Coupon', CouponSchema);
+const CouponModel = model<ICouponModel>('coupons', CouponSchema);
 
 export { CouponModel };

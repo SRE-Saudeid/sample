@@ -6,6 +6,7 @@ resources:
     - repository: templates
       type: git
       name: templates
+      ref: refs/heads/release
 
 
 stages:

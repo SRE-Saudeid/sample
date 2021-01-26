@@ -18,15 +18,15 @@ stages:
         stage: 'Development'
         environment: 'dev'
         app: 'cupons'
-- stage: Homologation
+- stage: Quality
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
   jobs:
   - template: BuildTemplates/qa-pipeline.yaml@templates
     parameters:
         namespace: 'b2c'
-        release: 'hml-cupons'
-        stage: 'Homologation'
-        environment: 'hml'
+        release: 'qa-cupons'
+        stage: 'Quality'
+        environment: 'qa'
         app: 'cupons'
 - stage: Production
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
@@ -34,7 +34,7 @@ stages:
   - template: BuildTemplates/prod-pipeline.yaml@templates
     parameters:
         namespace: 'b2c'
-        release: 'prod-cupons'
+        release: 'prod-cuponse'
         stage: 'Production'
         environment: 'prod'
         app: 'cupons'

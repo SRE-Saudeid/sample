@@ -5,7 +5,7 @@ resources:
   repositories:
     - repository: templates
       type: git
-      name: templates
+      name: Area-Engenharia/templates
       ref: refs/heads/release
 
 

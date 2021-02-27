@@ -12,7 +12,7 @@ resources:
 stages:
 - stage: Development
   jobs:
-  - template: BuildTemplates/develop-build.yaml@templates
+  - template: BuildTemplates/azure-pipelines.yamll@templates
     parameters:
         namespace: 'b2c'
         release: 'dev-cupons'

@@ -9,6 +9,6 @@ resources:
 stages:
 - template: BuildTemplates/azure-pipelines.yaml@templates
   parameters:
-      namespace: 'b2c'
-      app: 'cupons'
+      namespace: 'poc'
+      app: 'sample'
       coveragetest: false

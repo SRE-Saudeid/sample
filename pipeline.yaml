@@ -1,41 +1,14 @@
-# Repo: templates/
-# File: azure-pipelines.yml
 
 resources:
   repositories:
     - repository: templates
       type: git
-      name: templates
+      name: Area-Engenharia/templates
       ref: refs/heads/release
-
-
+      
 stages:
-- stage: Development
-  jobs:
-  - template: BuildTemplates/develop-build.yaml@templates
-    parameters:
-        namespace: 'b2c'
-        release: 'dev-cupons'
-        stage: 'Development'
-        environment: 'dev'
-        app: 'cupons'
-- stage: Quality
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
-  jobs:
-  - template: BuildTemplates/qa-pipeline.yaml@templates
-    parameters:
-        namespace: 'b2c'
-        release: 'qa-cupons'
-        stage: 'Quality'
-        environment: 'qa'
-        app: 'cupons'
-- stage: Production
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/release'))
-  jobs:
-  - template: BuildTemplates/prod-pipeline.yaml@templates
-    parameters:
-        namespace: 'b2c'
-        release: 'prod-cuponse'
-        stage: 'Production'
-        environment: 'prod'
-        app: 'cupons'
+- template: BuildTemplates/azure-pipelines.yaml@templates
+  parameters:
+      namespace: 'poc'
+      app: 'sample'
+      coveragetest: false

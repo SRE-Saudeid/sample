@@ -5,7 +5,7 @@ resources:
       type: git
       name: Area-Engenharia/templates
       ref: refs/heads/release
-      
+#      
 stages:
 - template: BuildTemplates/azure-pipelines.yaml@templates
   parameters:

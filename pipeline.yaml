@@ -4,7 +4,7 @@ resources:
     - repository: templates
       type: git
       name: Area-Engenharia/templates
-      ref: refs/heads/release
+      ref: refs/heads/dev
 #     
 stages:
 - template: BuildTemplates/azure-pipelines.yaml@templates

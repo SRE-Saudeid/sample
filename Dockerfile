@@ -1,5 +1,7 @@
 FROM node:12
 ENV NODE_ENV=$(teste)
+ARG teste
+RUN echo $(teste)
 WORKDIR /app
 ##
 COPY . /app

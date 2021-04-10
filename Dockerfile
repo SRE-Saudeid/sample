@@ -1,5 +1,5 @@
 FROM node:12
-ENV teste4 ${teste:teste}
+ENV teste4 $(teste)
 ARG ${teste:teste}
 ENV teste5 ${TESTE1}
 ARG ${TESTE1}

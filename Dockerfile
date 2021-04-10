@@ -1,6 +1,6 @@
 FROM node:12
-ENV teste4 ${process.env:teste}
-ARG ${teste}
+ENV teste4 ${teste:teste}
+ARG ${teste:teste}
 ENV teste5 ${TESTE1}
 ARG ${TESTE1}
 RUN env

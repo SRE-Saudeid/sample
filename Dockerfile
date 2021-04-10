@@ -1,6 +1,6 @@
 FROM node:12
-ENV NODE_ENV=$(teste)
-ARG teste
+ENV NODE_ENV=${teste}
+ARG ${teste}
 RUN env
 WORKDIR /app
 ##

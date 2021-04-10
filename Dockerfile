@@ -1,5 +1,5 @@
 FROM node:12
-ENV NODE_ENV={{environment}}
+ENV NODE_ENV=$(TESTE)
 WORKDIR /app
 ##
 COPY . /app

@@ -1,5 +1,5 @@
 FROM node:12
-ENV NODE_ENV=$(TESTE)
+ENV NODE_ENV=$(teste)
 WORKDIR /app
 ##
 COPY . /app

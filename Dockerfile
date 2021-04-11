@@ -1,6 +1,6 @@
 FROM node:12
-ENV teste4 $TESTE
-ARG $TESTE
+ENV teste4 $teste
+ARG $teste
 ENV teste5 $TESTE1
 ARG $TESTE1
 RUN env

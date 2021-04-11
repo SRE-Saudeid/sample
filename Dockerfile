@@ -1,13 +1,2 @@
-FROM node:12
-
-WORKDIR /app
-##
-COPY . /app
-RUN ls
-RUN npm install
-
-RUN npm run build
-
-EXPOSE 3000
-
-CMD ["node", "./dist/index.js"]
+FROM nginx:mainline-alpine
+COPY index.html /usr/share/nginx/html/

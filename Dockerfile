@@ -1,8 +1,9 @@
 FROM node:12
-ENV teste4 ${teste}
+
 ARG ${teste}
-ENV teste5 $TESTE1
+ENV teste4 ${teste}
 ARG $TESTE1
+ENV teste5 $TESTE1
 RUN env
 WORKDIR /app
 ##

@@ -1,10 +1,5 @@
 FROM node:12
-COPY variables ./.env
-ARG ${TESTE}
-ARG ${TESTE1}
-ENV teste4 ${TESTE}
-ENV teste5 ${TESTE1}
-RUN env
+
 WORKDIR /app
 ##
 COPY . /app

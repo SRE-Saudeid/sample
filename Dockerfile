@@ -1,5 +1,5 @@
 FROM node:12
-
+COPY variables.env ./.env
 ARG ${TESTE}
 ARG ${TESTE1}
 ENV teste4 ${TESTE}

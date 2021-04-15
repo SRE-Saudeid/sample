@@ -12,4 +12,4 @@ stages:
       namespace: 'poc'
       app: 'sample'
       coveragetest: false
-      variables: teste
+      variables: 'teste'
